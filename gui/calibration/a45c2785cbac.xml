@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Calibration>
+  <Curve>
+    <TL x3="0" x2="0" x="0.0938" c="-270.7218"/>
+    <TR x3="0" x2="0" x="0.0955" c="-498.4008"/>
+    <BL x3="0" x2="0" x="0.0966" c="-261.0236"/>
+    <BR x3="0" x2="0" x="0.0972" c="-341.9020"/>    
+  </Curve>
+  <Origin x="0" y ="0" z="0"/>
+  <Tare weight="3.5"/>
+</Calibration>
+

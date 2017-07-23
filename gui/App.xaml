@@ -1,0 +1,30 @@
+<Application x:Class="wiicapture.gui.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:wiicapture.gui" 
+             xmlns:viewmodel="clr-namespace:wiicapture.gui.ViewModel"
+             xmlns:utils="clr-namespace:wiicapture.gui.Utils"
+             StartupUri="MainWindow.xaml" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d1p1:Ignorable="d" 
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/ErrorTemplates.xaml" />
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.xaml" />
+                <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml" />
+                <ResourceDictionary Source="/Themes/MetroButtonTemplate.xaml" />
+                <ResourceDictionary Source="/Themes/ModalWindowTemplate.xaml" />
+                <ResourceDictionary Source="/Themes/CustomStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <viewmodel:ViewModelLocator x:Key="ViewModelLocator" d:IsDataSource="True" />
+            <utils:COPValueConverter x:Key="CopValue" />
+            <utils:DeviceStatusColorValueConverter x:Key="deviceStatusColorConverter"/>
+            <utils:AllHardwareConnectedConverter x:Key="AllHardwareConnected"/>
+            <utils:AnyHardwareConnectedConverter x:Key="AnyHardwareConnected"/>
+            <utils:VisibilityValueConverter x:Key="visibilityValueConverter"/>
+            <utils:EnabledValueConverter x:Key="enabledValueConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

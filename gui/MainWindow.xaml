@@ -1,0 +1,195 @@
+﻿<Window x:Class="wiicapture.gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wiicapture.gui"
+        xmlns:views="clr-namespace:wiicapture.gui.Views"
+        mc:Ignorable="d"
+        
+        xmlns:pt="clr-namespace:PropertyTools.Wpf;assembly=PropertyTools.Wpf"
+        xmlns:vm="clr-namespace:wiicapture.gui.ViewModel"
+        xmlns:viewmodel="clr-namespace:wiicapture.gui.ViewModel"
+        xmlns:utils="clr-namespace:wiicapture.gui.Utils"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+        xmlns:properties="clr-namespace:wiicapture.gui.Properties"
+        
+        Title="WII Capture" Width="1024" Height="768" 
+        WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized"
+        DataContext="{Binding MainViewModel, Source={StaticResource ViewModelLocator}}">
+    <Grid Background="{StaticResource WindowBackground}">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Settings" Command="{Binding ShowSettingsCommand}"/>
+                    <MenuItem Header="Exit" Command="{Binding QuitApplicationCommand}"/>
+                </MenuItem>               
+            </Menu>
+            <TextBlock Background="{StaticResource WindowBackground}" DockPanel.Dock="Top" Name="toast" Text="{Binding StatusMessage}" HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Top"/>
+            <Grid DockPanel.Dock="Bottom">
+                <Border Style="{StaticResource OverlayPanel}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Panel.ZIndex="1000" Grid.Column="1" MaxHeight="80" MinHeight="30" MinWidth="150">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" x:Name="dynamicToolbar">
+                            <Button Style="{StaticResource MetroButton}" Command="{Binding CaptureViewModel.CaptureCommand}">
+                                <Button.Visibility>
+                                    <MultiBinding Converter="{StaticResource visibilityValueConverter}">
+                                        <Binding Path="CaptureViewModel.CaptureInProgress"/>
+                                        <Binding>
+                                            <Binding.Source>
+                                                <sys:Boolean>True</sys:Boolean>
+                                            </Binding.Source>
+                                        </Binding>
+                                        <Binding>
+                                            <Binding.Source>
+                                                <sys:Boolean>True</sys:Boolean>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </Button.Visibility>
+                                <Image Source="images/appbar.video.basic.png"/>
+                            </Button>
+                            <Button Style="{StaticResource MetroButton}" Command="{Binding CaptureViewModel.EndCaptureCommand}">
+                                <Button.Visibility>
+                                    <MultiBinding Converter="{StaticResource visibilityValueConverter}">
+                                        <Binding Path="CaptureViewModel.CaptureInProgress"/>
+                                        <Binding>
+                                            <Binding.Source>
+                                                <sys:Boolean>False</sys:Boolean>
+                                            </Binding.Source>
+                                        </Binding>
+                                        <Binding>
+                                            <Binding.Source>
+                                                <sys:Boolean>True</sys:Boolean>
+                                            </Binding.Source>
+                                        </Binding>
+                                    </MultiBinding>
+                                </Button.Visibility>
+                                <Image Source="images/appbar.control.stop.png"/>
+                            </Button>
+                            <Button Style="{StaticResource MetroButton}" Command="{Binding ShowSettingsCommand}">
+                                <Image Source="images/appbar.cog.png"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource WindowBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height=".4*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*"></ColumnDefinition>
+                    <ColumnDefinition Width=".5*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Viewbox Grid.Column="0" Grid.Row="0">
+                    <Image Name="wii1Path" Stretch="UniformToFill" Source="{Binding CaptureViewModel.WIILeftViewModel.COPPathImage}"/>
+                </Viewbox>
+                <Button Grid.Row="1" Grid.Column="0" Content="Clear" Command="{Binding CaptureViewModel.WIILeftViewModel.ClearCommand}"/>
+                <Viewbox Grid.Column="1" Grid.Row="0">
+                    <Image Name="wii2Path" Stretch="UniformToFill" Source="{Binding CaptureViewModel.WIIRightViewModel.COPPathImage}"/>
+                </Viewbox>
+                <Button Grid.Row="1" Grid.Column="1" Content="Clear" Command="{Binding CaptureViewModel.WIIRightViewModel.ClearCommand}"/>
+                <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                        <ColumnDefinition Width=".5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                        <Viewbox Grid.Column="0">
+                            <Canvas  Name="wii1Canvas"
+                                            Background="White" 
+                                            Width="430" 
+                                            Height="240"  
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            ClipToBounds="True">
+                                <Ellipse Name="wii1COP" Fill="Red" Width="5" Height="5">
+                                    <Canvas.Left>
+                                        <MultiBinding Converter="{StaticResource CopValue}">
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Single>0.43</sys:Single>
+                                                </Binding.Source>
+                                            </Binding>
+                                            <Binding Path="CaptureViewModel.WIILeftViewModel.ForceFrame.COP_Custom.X"/>
+                                            <Binding ElementName="wii1Canvas" Path="ActualWidth" />
+                                            <Binding ElementName="wii1COP" Path="ActualWidth" />
+                                        </MultiBinding>
+                                    </Canvas.Left>
+                                    <Canvas.Top>
+                                        <MultiBinding Converter="{StaticResource CopValue}">
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Single>0.24</sys:Single>
+                                                </Binding.Source>
+                                            </Binding>
+                                            <Binding Path="CaptureViewModel.WIILeftViewModel.ForceFrame.COP_Custom.Y"/>
+                                            <Binding ElementName="wii1Canvas" Path="ActualHeight" />
+                                            <Binding ElementName="wii1COP" Path="ActualHeight" />
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Boolean>True</sys:Boolean>
+                                                </Binding.Source>
+                                            </Binding>
+                                    </MultiBinding>
+                                    </Canvas.Top>
+                                </Ellipse>
+                            </Canvas>
+                        </Viewbox>
+
+                    <Viewbox Grid.Column="1">
+                            <Canvas  Name="wii2Canvas"
+                                            Background="White" 
+                                            Width="430" 
+                                            Height="240"  
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            ClipToBounds="True">
+                                <Ellipse Name="wii2COP" Fill="Red" Width="5" Height="5">
+                                    <Canvas.Left>
+                                        <MultiBinding Converter="{StaticResource CopValue}">
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Single>0.43</sys:Single>
+                                                </Binding.Source>
+                                            </Binding>
+                                            <Binding Path="CaptureViewModel.WIIRightViewModel.ForceFrame.COP_Custom.X"/>
+                                            <Binding ElementName="wii2Canvas" Path="ActualWidth" />
+                                            <Binding ElementName="wii2COP" Path="ActualWidth" />
+                                        </MultiBinding>
+                                    </Canvas.Left>
+                                    <Canvas.Top>
+                                        <MultiBinding Converter="{StaticResource CopValue}">
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Single>0.24</sys:Single>
+                                                </Binding.Source>
+                                            </Binding>
+                                            <Binding Path="CaptureViewModel.WIIRightViewModel.ForceFrame.COP_Custom.Y"/>
+                                            <Binding ElementName="wii2Canvas" Path="ActualHeight" />
+                                            <Binding ElementName="wii2COP" Path="ActualHeight" />
+                                            <Binding>
+                                                <Binding.Source>
+                                                    <sys:Boolean>True</sys:Boolean>
+                                                </Binding.Source>
+                                            </Binding>
+                                        </MultiBinding>
+                                    </Canvas.Top>
+                                </Ellipse>
+                            </Canvas>
+                        </Viewbox>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

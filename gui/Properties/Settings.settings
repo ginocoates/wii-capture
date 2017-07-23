@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="wiicapture.gui.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Weight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WIIDeviceIDLeft" Type="System.String" Scope="User">
+      <Value Profile="(Default)">a45c2785eeed</Value>
+    </Setting>
+    <Setting Name="WIIDeviceIDRight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">002444e25ecf</Value>
+    </Setting>
+    <Setting Name="WIIFrequencyHz" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">40</Value>
+    </Setting>
+    <Setting Name="OutputPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SubjectName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DefaultSubject</Value>
+    </Setting>
+    <Setting Name="TrialName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Trial</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

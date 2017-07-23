@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="wiicapture.gui.Views.Settings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodel="clr-namespace:wiicapture.gui.ViewModel"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
+             xmlns:utils="clr-namespace:wiicapture.gui.Utils"             
+             mc:Ignorable="d" 
+             DataContext="{Binding SettingsViewModel, Source={StaticResource ViewModelLocator}}"
+             Background="{StaticResource WindowBackground}"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ObjectDataProvider ObjectInstance="{x:Type Colors}" MethodName="GetProperties" x:Key="colorPropertiesOdp" />
+    </UserControl.Resources>
+    <TabControl Style="{StaticResource SettingsTabStyle}">
+        <TabItem Header="WII Balance Board">
+            <StackPanel>
+                <Label Style="{StaticResource SettingsHeader}">WII Balance Board</Label>
+                <Label>Device ID (Left Foot)</Label>
+                <TextBox Text="{Binding Settings.WIIDeviceIDLeft}"/>
+                <Label>Device ID (Right Foot)</Label>
+                <TextBox Text="{Binding Settings.WIIDeviceIDRight}"/>
+                <Label>WII Capture Frequency</Label>
+                <TextBox Text="{Binding Settings.WIIFrequencyHz}"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Capture">
+            <StackPanel>
+                <Label Style="{StaticResource SettingsHeader}">Data</Label>
+                <Label VerticalAlignment="Center">Save Data To</Label>
+                <DockPanel HorizontalAlignment="Stretch">
+                    <Button Name="browseCaptureFolderButton" Content="..." Width="24" Height="24" DockPanel.Dock="Right" VerticalAlignment="Bottom" Command="{Binding SetOutputPathCommand}"/>
+                    <TextBox TabIndex="1" Name="captureFilePath"
+                                              Validation.ErrorTemplate="{StaticResource validationTemplate}"
+                                              Style="{StaticResource textBoxInError}">
+                        <TextBox.Text>
+                            <Binding Path="Settings.OutputPath"
+                                                 UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <utils:RequiredRule Message="Required!"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </DockPanel>
+                <Label Style="{StaticResource SettingsHeader}">Trial</Label>
+                <Label>Subject Name</Label>
+                <TextBox Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+                    <TextBox.Text>
+                        <Binding Path="Settings.SubjectName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <utils:RequiredRule Message="Required!"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Label>Trial Name</Label>
+                <TextBox Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+                    <TextBox.Text>
+                        <Binding Path="Settings.TrialName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <utils:RequiredRule Message="Required!"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Label>Weight (kg)</Label>
+                <DockPanel HorizontalAlignment="Stretch" Height="32">
+                    <Button DockPanel.Dock="Right" Command="{Binding CaptureViewModel.CaptureWeightCommand}">
+                        <Image Source="../images/target2.png" Width="25"/>
+                    </Button>
+                    <TextBox Text="{Binding Settings.Weight, Mode=OneWay}"></TextBox>
+                </DockPanel>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</UserControl>
